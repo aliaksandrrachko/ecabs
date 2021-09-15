@@ -5,10 +5,12 @@ import com.senlainc.bsdd.ecabs.booking.producer.api.rabbitmq.IGenericRabbitMQSen
 import lombok.Getter;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 public abstract class AGenericRabbitMQSender<K extends Number, T extends AEntityDto<K>> implements IGenericRabbitMQSender<K, T> {
 
     @Autowired
+    @Qualifier(value = "rabbitJsonTemplate")
     private AmqpTemplate rabbitTemplate;
 
     @Getter
@@ -28,6 +30,6 @@ public abstract class AGenericRabbitMQSender<K extends Number, T extends AEntity
 
     @Override
     public void send(T object, String routingKey) {
-        rabbitTemplate.convertAndSend(exchange, routingKey, object);
+        this.rabbitTemplate.convertAndSend(exchange, routingKey, object);
     }
 }

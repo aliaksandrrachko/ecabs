@@ -16,13 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>com.senlainc.bsdd.ecabs.adapter</groupId>
-            <artifactId>ecabs-adapter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.senlainc.bsdd.ecabs.adapter</groupId>
             <artifactId>ecabs-adapter-api</artifactId>
         </dependency>
     </dependencies>
-
-
 </project>

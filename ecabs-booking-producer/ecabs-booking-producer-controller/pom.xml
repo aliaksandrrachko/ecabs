@@ -22,6 +22,10 @@
             <groupId>com.senlainc.bsdd.ecabs.booking.producer</groupId>
             <artifactId>ecabs-booking-producer-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.senlainc.bsdd.ecabs.booking.producer</groupId>
+            <artifactId>ecabs-booking-producer-service</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

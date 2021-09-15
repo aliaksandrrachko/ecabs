@@ -1,6 +1,6 @@
 package com.senlainc.bsdd.ecabs.booking.producer.rabbitmqsernder;
 
-import com.senlainc.bsdd.ecabs.adapter.Routing;
+import com.senlainc.bsdd.ecabs.adapter.routers.Routing;
 import com.senlainc.bsdd.ecabs.adapter.api.dto.BookingDto;
 import com.senlainc.bsdd.ecabs.booking.producer.api.rabbitmq.IBookingRabbitMQSender;
 import org.springframework.stereotype.Component;
@@ -11,6 +11,6 @@ public class BookingRabbitMQSender
         implements IBookingRabbitMQSender {
 
     protected BookingRabbitMQSender() {
-        super(BookingDto.class, Routing.MessageExchange.E_CABS_MESSAGE_EXCHANGE);
+        super(BookingDto.class, Routing.MESSAGE_EXCHANGE.E_CABS_MESSAGE_EXCHANGE);
     }
 }

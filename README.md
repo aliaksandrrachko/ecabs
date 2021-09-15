@@ -24,3 +24,9 @@ Spring AMQP’s RabbitTemplate provides everything you need to send and receive 
 * Configure a message listener container.
 * Declare the queue, the exchange, and the binding between them.
 * Configure a component to send some messages to test the listener.
+
+## MongoDb
+Run docker container
+```shell
+docker run --name some-mongo -d mongo:latest
+```
