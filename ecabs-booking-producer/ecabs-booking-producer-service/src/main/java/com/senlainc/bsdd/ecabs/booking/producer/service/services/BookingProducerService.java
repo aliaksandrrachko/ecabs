@@ -19,7 +19,7 @@ public class BookingProducerService implements IBookingService {
     private IBookingRabbitMQSender bookingRabbitMQSender;
 
     @Override
-    public void deleteBooking(Long id) {
+    public void deleteBooking(String id) {
         BookingDto dtoToSend = BookingDto.builder().id(id).build();
         this.bookingRabbitMQSender.send(dtoToSend, E_CABS_BOOKING_DEL_ROUTES_KEY);
     }
@@ -30,7 +30,7 @@ public class BookingProducerService implements IBookingService {
     }
 
     @Override
-    public void editBooking(Long id, BookingDto bookingDto) {
+    public void editBooking(String id, BookingDto bookingDto) {
         bookingDto.setId(id);
         this.bookingRabbitMQSender.send(bookingDto, E_CABS_BOOKING_EDIT_ROUTES_KEY);
     }

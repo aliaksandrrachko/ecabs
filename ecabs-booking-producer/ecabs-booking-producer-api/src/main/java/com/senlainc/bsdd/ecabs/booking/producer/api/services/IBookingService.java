@@ -4,9 +4,9 @@ import com.senlainc.bsdd.ecabs.adapter.api.dto.BookingDto;
 
 public interface IBookingService {
 
-    void deleteBooking(Long id);
+    void deleteBooking(String id);
 
     void addBooking(BookingDto bookingDto);
 
-    void editBooking(Long id, BookingDto bookingDto);
+    void editBooking(String id, BookingDto bookingDto);
 }

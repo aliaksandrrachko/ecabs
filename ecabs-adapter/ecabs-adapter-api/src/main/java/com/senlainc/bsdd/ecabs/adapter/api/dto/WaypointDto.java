@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class WaypointDto extends AEntityDto<Long>{
+public class WaypointDto extends AEntityDto<String>{
 
     private String locality;
     private String latitude;

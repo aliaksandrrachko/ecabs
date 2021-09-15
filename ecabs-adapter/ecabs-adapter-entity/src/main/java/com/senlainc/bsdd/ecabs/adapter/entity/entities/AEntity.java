@@ -13,7 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public abstract class AEntity<K extends Number> implements Serializable {
+public abstract class AEntity<K extends Serializable> implements Serializable {
 
     protected K id;
 }

@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Waypoint extends AEntity<Long>{
+public class Waypoint extends AEntity<String> {
 
     private String locality;
     private String latitude;

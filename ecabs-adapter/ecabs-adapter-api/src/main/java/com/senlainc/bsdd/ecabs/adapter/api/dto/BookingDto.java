@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.mapstruct.Mapping;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -18,7 +19,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class BookingDto extends AEntityDto<Long>{
+public class BookingDto extends AEntityDto<String>{
 
     private String passengerName;
     private PhoneNumber contactNumber;
@@ -30,5 +31,5 @@ public class BookingDto extends AEntityDto<Long>{
     private double rating;
     private LocalDateTime createdOn;
     private LocalDateTime lastModifiedOn;
-    private Set<Waypoint> tripWaypoints;
+    private Set<WaypointDto> tripWaypoints;
 }

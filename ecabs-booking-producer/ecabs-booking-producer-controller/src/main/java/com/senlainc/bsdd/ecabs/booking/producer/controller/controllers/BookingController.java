@@ -15,7 +15,7 @@ public class BookingController {
 
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteBooking(@PathVariable Long id) {
+    public void deleteBooking(@PathVariable String id) {
         this.bookingService.deleteBooking(id);
     }
 
@@ -27,7 +27,7 @@ public class BookingController {
 
     @PutMapping(value = "/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    public void editBooking(@PathVariable Long id, @RequestBody BookingDto bookingDto) {
+    public void editBooking(@PathVariable String id, @RequestBody BookingDto bookingDto) {
         this.bookingService.editBooking(id, bookingDto);
     }
 }

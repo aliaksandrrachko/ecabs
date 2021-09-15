@@ -7,7 +7,9 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-public abstract class AGenericRabbitMQSender<K extends Number, T extends AEntityDto<K>> implements IGenericRabbitMQSender<K, T> {
+import java.io.Serializable;
+
+public abstract class AGenericRabbitMQSender<K extends Serializable, T extends AEntityDto<K>> implements IGenericRabbitMQSender<K, T> {
 
     @Autowired
     @Qualifier(value = "rabbitJsonTemplate")

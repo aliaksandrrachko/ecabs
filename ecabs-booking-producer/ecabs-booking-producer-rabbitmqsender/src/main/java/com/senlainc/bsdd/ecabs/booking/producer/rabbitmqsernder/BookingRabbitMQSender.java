@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BookingRabbitMQSender
-        extends AGenericRabbitMQSender<Long, BookingDto>
+        extends AGenericRabbitMQSender<String, BookingDto>
         implements IBookingRabbitMQSender {
 
     protected BookingRabbitMQSender() {

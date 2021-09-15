@@ -17,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Booking extends AEntity<Long>{
+public class Booking extends AEntity<String>{
 
     private String passengerName;
     private PhoneNumber contactNumber;
