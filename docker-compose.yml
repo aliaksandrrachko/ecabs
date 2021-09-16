@@ -1,0 +1,71 @@
+version: '3.4'
+
+services:
+
+  ecabs-rabbit:
+    hostname: ecabs-rabbit
+    image: rabbitmq:3-management
+    container_name: rabbit-assignment
+    volumes:
+      - "rabbit-data:/var/lib/rabbitmq/mnesia/"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_VHOST=/
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+  ecabs-booking-producer:
+    image: ecabs-booking-producer:latest
+    build:
+      context: ./ecabs-booking-producer
+      dockerfile: Dockerfile
+    container_name: ecabs-booking-producer
+    depends_on:
+      - ecabs-rabbit
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - app-logs:/logs
+    links:
+      - ecabs-rabbit:ecabs-rabbit
+
+  ecabs-booking-consumer:
+    image: ecabs-booking-consumer:latest
+    build:
+      context: ./ecabs-booking-consumer
+      dockerfile: Dockerfile
+    container_name: ecabs-booking-consumer
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    depends_on:
+      - ecabs-rabbit
+      - ecabs-mongo
+    volumes:
+      - app-logs:/logs
+    links:
+      - ecabs-rabbit:ecabs-rabbit
+      - ecabs-mongo:ecabs-mongo
+
+  ecabs-mongo:
+    image: mongo:latest
+    container_name: ecabs-mongo
+    restart: always
+    volumes:
+      - ./data/mongodb/db:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo ecabs-mongo:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+volumes:
+  app-logs:
+  rabbit-data:

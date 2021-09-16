@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.constraints.NotBlank;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,7 +15,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class WaypointDto extends AEntityDto<String>{
 
+    @NotBlank
     private String locality;
+    @NotBlank
     private String latitude;
+    @NotBlank
     private String longitude;
 }

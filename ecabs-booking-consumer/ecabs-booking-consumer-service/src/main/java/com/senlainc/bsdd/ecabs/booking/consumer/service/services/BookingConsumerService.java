@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -56,7 +55,6 @@ public class BookingConsumerService implements IBookingService {
         booking.setCreatedOn(LocalDateTime.now().withNano(0));
         booking.setLastModifiedOn(LocalDateTime.now().withNano(0));
         booking.setPrice(new BigDecimal("125.23"));
-        booking.setWaitingTime(Duration.between(LocalDateTime.now().withNano(0), LocalDateTime.now().withNano(0).plusDays(2)));
         bookingRepository.save(booking);
     }
 

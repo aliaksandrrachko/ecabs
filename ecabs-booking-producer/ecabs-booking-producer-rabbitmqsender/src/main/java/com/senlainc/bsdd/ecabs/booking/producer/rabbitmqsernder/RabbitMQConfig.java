@@ -95,8 +95,7 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(bookingExchange).to(messageExchange).with(E_CABS_MESSAGE_AUDIT_ROUTES_KEY);
     }
 
-    // TODO: think about exchange to exchange
-    // TODO: why AmqpAdmin doesn't create automatically
+    // TODO: why AmqpAdmin doesn't create automatically (it will creating by beans)
 
     @Bean
     AmqpAdmin amqpAdmin(ConnectionFactory connectionFactory) {
