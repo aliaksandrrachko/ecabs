@@ -20,7 +20,7 @@
         </dependency>
         <dependency>
             <groupId>com.senlainc.bsdd.ecabs.booking.producer</groupId>
-            <artifactId>ecabs-booking-producer-rabbitmqsender</artifactId>
+            <artifactId>ecabs-booking-producer-kafkasender</artifactId>
         </dependency>
     </dependencies>
 

@@ -6,8 +6,8 @@ import com.senlainc.bsdd.ecabs.adapter.entity.entities.Booking;
 import com.senlainc.bsdd.ecabs.booking.consumer.api.repositories.BookingRepository;
 import com.senlainc.bsdd.ecabs.booking.consumer.api.services.IBookingService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,10 +15,11 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static com.senlainc.bsdd.ecabs.adapter.routers.Routing.MESSAGE_EXCHANGE.BOOKING_EXCHANGE.E_CABS_BOOKING_ADD_QUEUE;
-import static com.senlainc.bsdd.ecabs.adapter.routers.Routing.MESSAGE_EXCHANGE.BOOKING_EXCHANGE.E_CABS_BOOKING_DEL_QUEUE;
-import static com.senlainc.bsdd.ecabs.adapter.routers.Routing.MESSAGE_EXCHANGE.BOOKING_EXCHANGE.E_CABS_BOOKING_EDIT_QUEUE;
-import static com.senlainc.bsdd.ecabs.adapter.routers.Routing.MESSAGE_EXCHANGE.E_CABS_MESSAGE_AUDIT_QUEUE;
+import static com.senlainc.bsdd.ecabs.adapter.routers.Routing.MESSAGE_EXCHANGE.BOOKING_EXCHANGE.E_CABS_BOOKING_ADD_ROUTES_KEY;
+import static com.senlainc.bsdd.ecabs.adapter.routers.Routing.MESSAGE_EXCHANGE.BOOKING_EXCHANGE.E_CABS_BOOKING_DEL_ROUTES_KEY;
+import static com.senlainc.bsdd.ecabs.adapter.routers.Routing.MESSAGE_EXCHANGE.BOOKING_EXCHANGE.E_CABS_BOOKING_EDIT_ROUTES_KEY;
+import static com.senlainc.bsdd.ecabs.adapter.routers.Routing.MESSAGE_EXCHANGE.BOOKING_EXCHANGE.E_CABS_BOOKING_EXCHANGE;
+import static com.senlainc.bsdd.ecabs.adapter.routers.Routing.MESSAGE_EXCHANGE.E_CABS_MESSAGE_EXCHANGE;
 
 @Service
 @Transactional(readOnly = true)
@@ -32,14 +33,17 @@ public class BookingConsumerService implements IBookingService {
     private BookingDtoMapper bookingDtoMapper;
 
     @Override
-    @RabbitListener(queues = E_CABS_MESSAGE_AUDIT_QUEUE)
+    @KafkaListener(topics = {E_CABS_BOOKING_ADD_ROUTES_KEY,
+            E_CABS_BOOKING_EDIT_ROUTES_KEY,
+            E_CABS_BOOKING_DEL_ROUTES_KEY},
+            groupId = E_CABS_MESSAGE_EXCHANGE)
     public void bookingAudit(BookingDto bookingDto) {
         log.info("BookingDto:{} received from 'ecabs-message-audit-queue'", bookingDto);
     }
 
     @Override
     @Transactional
-    @RabbitListener(queues = E_CABS_BOOKING_EDIT_QUEUE)
+    @KafkaListener(topics = E_CABS_BOOKING_EDIT_ROUTES_KEY, groupId = E_CABS_BOOKING_EXCHANGE)
     public void bookingEditConsumer(BookingDto bookingDto) {
         log.info("BookingDto:{} received from 'ecabs-message-edit-queue'", bookingDto);
         Booking bookingToSave = bookingDtoMapper.toEntity(bookingDto);
@@ -48,7 +52,7 @@ public class BookingConsumerService implements IBookingService {
 
     @Override
     @Transactional
-    @RabbitListener(queues = E_CABS_BOOKING_ADD_QUEUE)
+    @KafkaListener(topics = E_CABS_BOOKING_ADD_ROUTES_KEY, groupId = E_CABS_BOOKING_EXCHANGE)
     public void bookingAddConsumer(BookingDto bookingDto) {
         log.info("BookingDto:{} received from 'ecabs-message-add-queue'", bookingDto);
         Booking booking = bookingDtoMapper.toEntity(bookingDto);
@@ -60,7 +64,7 @@ public class BookingConsumerService implements IBookingService {
 
     @Override
     @Transactional
-    @RabbitListener(queues = E_CABS_BOOKING_DEL_QUEUE)
+    @KafkaListener(topics = E_CABS_BOOKING_DEL_ROUTES_KEY, groupId = "")
     public void bookingDelConsumer(BookingDto bookingDto) {
         log.info("BookingDto:{} received from 'ecabs-message-del-queue'", bookingDto);
         Optional<Booking> bookingForDeleting = bookingRepository.findById(bookingDto.getId());
