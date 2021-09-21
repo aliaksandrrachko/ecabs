@@ -15,7 +15,6 @@ public abstract class AGenericModelSenderKafka<K extends Serializable, T extends
 
     private final Class<T> clazz;
 
-
     protected AGenericModelSenderKafka(Class<T> clazz) {
         this.clazz = clazz;
     }

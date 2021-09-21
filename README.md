@@ -32,6 +32,43 @@ You can use docker-compose.yml, but I don't understand why microservices start e
 docker-compose up
 ```
 
+## Zookeeper
+### 1. Create a network
+```shell
+docker network create ecabs-network --driver bridge
+```
+
+### 2. Launch the Zookeeper server instance
+```shell
+docker run -d --name zookeeper-server \
+    --network ecabs-network \
+    -e ALLOW_ANONYMOUS_LOGIN=yes \
+    bitnami/zookeeper:latest
+```
+
+### 3. Launch the Kafka server instance
+```shell
+docker run -d --name kafka-server \
+    --network ecabs-network \
+    -e ALLOW_PLAINTEXT_LISTENER=yes \
+    -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper-server:2181 \
+    bitnami/kafka:latest
+```
+
+### 4. Launch your Kafka client instance
+```shell
+   docker run -it --rm \
+    --network app-tier \
+    -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper-server:2181 \
+    bitnami/kafka:latest kafka-topics.sh --list  --zookeeper zookeeper-server:2181
+```
+
+## To start messaging with docker-compose installed go to terminal and run
+See: https://habr.com/ru/post/505720/
+```shell
+docker-compose -f ./docker-compose.yml up -d
+```
+
 ## Projects and modules
  * ecabs-adapter
    * ecabs-adapter-api (Dtos and mappers)

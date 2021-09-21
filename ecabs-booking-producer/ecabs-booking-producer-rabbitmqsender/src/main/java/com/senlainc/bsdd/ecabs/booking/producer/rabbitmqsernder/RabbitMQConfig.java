@@ -28,7 +28,7 @@ import static com.senlainc.bsdd.ecabs.adapter.routers.Routing.MESSAGE_EXCHANGE.E
 import static com.senlainc.bsdd.ecabs.adapter.routers.Routing.MESSAGE_EXCHANGE.E_CABS_MESSAGE_EXCHANGE;
 
 @Configuration
-@EnableRabbit
+//@EnableRabbit
 public class RabbitMQConfig {
 
     // == Message Exchange ==
