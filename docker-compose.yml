@@ -1,55 +1,34 @@
 version: '3.4'
 
-# docker-compose --profile kafka up
-
 services:
 
   zookeeper:
-    profiles:
-      - kafka
-    image: confluentinc/cp-zookeeper:latest
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    ports:
-      - "2181:2181"
+    image: wurstmeister/zookeeper
+    container_name: ecabs-zookeeper
+    expose:
+      - "2181"
 
-  ecabs-kafka:
-    profiles:
-      - kafka
-    image: confluentinc/cp-kafka:latest
-    depends_on:
-      - zookeeper
+  kafka:
+    image: wurstmeister/kafka
     ports:
       - "9092:9092"
+    expose:
+      - "9093"
+    container_name: ecabs-kafka
     environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-
-  ## = ============== = ##
-
-  ecabs-rabbit:
-    hostname: ecabs-rabbit
-    image: rabbitmq:3-management
-    container_name: rabbit-assignment
-    profiles:
-      - rabbit
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://ecabs-kafka:9093,OUTSIDE://172.31.0.51:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:SASL_PLAINTEXT
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
+      KAFKA_ZOOKEEPER_CONNECT: ecabs-zookeeper:2181
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_OPTS: "-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf"
+      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
+    depends_on:
+      - zookeeper
     volumes:
-      - "rabbit-data:/var/lib/rabbitmq/mnesia/"
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      - RABBITMQ_DEFAULT_VHOST=/
-    healthcheck:
-      test: rabbitmq-diagnostics -q ping
-      interval: 30s
-      timeout: 30s
-      retries: 3
+      - ./:/etc/kafka
 
   ecabs-booking-producer:
     image: ecabs-booking-producer:latest
@@ -57,8 +36,8 @@ services:
       context: ./ecabs-booking-producer
       dockerfile: Dockerfile
     container_name: ecabs-booking-producer
-#    depends_on:
-#      - ecabs-rabbit
+    depends_on:
+      - kafka
     environment:
       - SPRING_PROFILES_ACTIVE=dev
     ports:
@@ -66,8 +45,7 @@ services:
     volumes:
       - app-logs:/logs
     links:
-      - ecabs-kafka:ecabs-kafka
-#      - ecabs-rabbit:ecabs-rabbit
+      - kafka:kafka
 
   ecabs-booking-consumer:
     image: ecabs-booking-consumer:latest
@@ -78,16 +56,15 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=dev
     depends_on:
-#      - ecabs-rabbit
-      - ecabs-mongo
+      - kafka
+      - mongo
     volumes:
       - app-logs:/logs
     links:
-      - ecabs-kafka:ecabs-kafka
-#      - ecabs-rabbit:ecabs-rabbit
-      - ecabs-mongo:ecabs-mongo
+      - kafka:kafka
+      - mongo:mongo
 
-  ecabs-mongo:
+  mongo:
     image: mongo:latest
     container_name: ecabs-mongo
     restart: always
@@ -102,17 +79,3 @@ services:
 
 volumes:
   app-logs:
-  rabbit-data:
-
-networks:
-  kafka:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.5.0.0/16
-          ip_range: 10.5.0.0/24
-          gateway: 10.5.0.1
-          aux_addresses:
-            kafka: 10.5.0.2
-            zookeeper: 10.5.0.3
