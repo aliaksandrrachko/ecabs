@@ -1,5 +1,5 @@
 # https://github.com/confluentinc/demo-scene/blob/master/community-components-only/docker-compose.yml#L22-L51
-#
+
 version: '3.4'
 services:
   zookeeper:
