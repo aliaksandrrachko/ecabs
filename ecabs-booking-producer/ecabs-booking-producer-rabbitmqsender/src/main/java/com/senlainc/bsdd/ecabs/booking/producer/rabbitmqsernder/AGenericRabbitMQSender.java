@@ -1,7 +1,7 @@
 package com.senlainc.bsdd.ecabs.booking.producer.rabbitmqsernder;
 
 import com.senlainc.bsdd.ecabs.adapter.api.dto.AEntityDto;
-import com.senlainc.bsdd.ecabs.booking.producer.api.rabbitmq.IGenericRabbitMQSender;
+import com.senlainc.bsdd.ecabs.booking.producer.api.producers.IGenericModelSender;
 import lombok.Getter;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.io.Serializable;
 
-public abstract class AGenericRabbitMQSender<K extends Serializable, T extends AEntityDto<K>> implements IGenericRabbitMQSender<K, T> {
+public abstract class AGenericRabbitMQSender<K extends Serializable, T extends AEntityDto<K>> implements IGenericModelSender<K, T> {
 
     @Autowired
     @Qualifier(value = "rabbitJsonTemplate")

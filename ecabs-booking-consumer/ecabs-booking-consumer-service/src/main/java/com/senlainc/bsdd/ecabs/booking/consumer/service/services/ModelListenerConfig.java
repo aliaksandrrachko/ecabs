@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableRabbit
 @ComponentScan(value = {"com.senlainc.bsdd.ecabs.adapter.api.mappers"})
-public class RabbitMQListenerConfig {
+public class ModelListenerConfig {
 
     @Bean
     MessageConverter jsonMessageConverter() {

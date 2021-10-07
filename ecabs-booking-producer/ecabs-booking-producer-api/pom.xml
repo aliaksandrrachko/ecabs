@@ -18,5 +18,10 @@
             <groupId>com.senlainc.bsdd.ecabs.adapter</groupId>
             <artifactId>ecabs-adapter-api</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.senlainc.bsdd.ecabs.adapter</groupId>
+            <artifactId>ecabs-adapter-router</artifactId>
+        </dependency>
     </dependencies>
 </project>
