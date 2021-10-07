@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static com.senlainc.bsdd.ecabs.adapter.routers.Routing.MESSAGE_EXCHANGE.BOOKING_EXCHANGE.E_CABS_BOOKING_ADD_QUEUE;
 import static com.senlainc.bsdd.ecabs.adapter.routers.Routing.MESSAGE_EXCHANGE.BOOKING_EXCHANGE.E_CABS_BOOKING_DEL_QUEUE;
@@ -41,29 +40,27 @@ public class BookingConsumerService implements IBookingService {
     @Transactional
     @RabbitListener(queues = E_CABS_BOOKING_EDIT_QUEUE)
     public void bookingEditConsumer(BookingDto bookingDto) {
-        log.info("BookingDto:{} received from 'ecabs-message-edit-queue'", bookingDto);
-        Booking bookingToSave = bookingDtoMapper.toEntity(bookingDto);
-        bookingRepository.save(bookingToSave);
+        this.bookingRepository.save(this.bookingDtoMapper.toEntity(bookingDto))
+                .log("BookingDto:{} received from 'ecabs-message-edit-queue'");
     }
 
     @Override
     @Transactional
     @RabbitListener(queues = E_CABS_BOOKING_ADD_QUEUE)
     public void bookingAddConsumer(BookingDto bookingDto) {
-        log.info("BookingDto:{} received from 'ecabs-message-add-queue'", bookingDto);
-        Booking booking = bookingDtoMapper.toEntity(bookingDto);
+        Booking booking = this.bookingDtoMapper.toEntity(bookingDto);
         booking.setCreatedOn(LocalDateTime.now().withNano(0));
         booking.setLastModifiedOn(LocalDateTime.now().withNano(0));
         booking.setPrice(new BigDecimal("125.23"));
-        bookingRepository.save(booking);
+        this.bookingRepository.save(booking).log("BookingDto:{} received from 'ecabs-message-add-queue'");
     }
 
     @Override
     @Transactional
     @RabbitListener(queues = E_CABS_BOOKING_DEL_QUEUE)
     public void bookingDelConsumer(BookingDto bookingDto) {
-        log.info("BookingDto:{} received from 'ecabs-message-del-queue'", bookingDto);
-        Optional<Booking> bookingForDeleting = bookingRepository.findById(bookingDto.getId());
-        bookingForDeleting.ifPresent(booking -> bookingRepository.delete(booking));
+        this.bookingRepository
+                .deleteById(bookingDto.getId())
+                .log("BookingDto:{} received from 'ecabs-message-del-queue'");
     }
 }
