@@ -47,3 +47,12 @@ docker-compose up
    * ecabs-booking-producer-main
    * ecabs-booking-producer-rabbitmqsender
    * ecabs-booking-service
+
+## Sonarqube
+   For consumer:
+```shell
+   mvn clean verify sonar:sonar \
+  -Dsonar.projectKey=eCabs \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.login=d64421ecc39029e7e56e3fa8f532cef47f8d46af
+```
